@@ -1,0 +1,48 @@
+# System files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor and IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Python caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Node dependencies and build artifacts
+node_modules/
+dist/
+build/
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+tmp/
+temp/
+
+# Office temporary files
+~$*.doc
+~$*.docx
+~$*.ppt
+~$*.pptx
+~$*.xls
+~$*.xlsx
+
+# Revise generated outputs and local thesis files
+*-修改稿.docx
+*-修改稿.pdf
+*-修改说明.md
+*-修改说明.pdf
+*.doc
+*.docx
+*.pdf
+
+# Keep Skill source files under version control
+!revise/**/*.md
+!revise/**/*.yaml

@@ -1,0 +1,3 @@
+display_name: Revise
+short_description: 审阅和修订毕业论文并生成修改说明
+default_prompt: 请使用Revise处理当前目录中的论文，默认跳过参考文献DOI真实性核验；PDF论文只输出修改稿、修改说明MD和修改说明PDF，并保证修改说明PDF表格线清晰、字号可读。
