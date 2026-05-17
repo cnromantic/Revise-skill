@@ -42,6 +42,7 @@ temp/
 *.doc
 *.docx
 *.pdf
+!Revise快速使用指南.PDF
 
 # Keep Skill source files under version control
 !revise/**/*.md
