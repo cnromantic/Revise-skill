@@ -1,3 +1,10 @@
 display_name: Revise
-short_description: 审阅和修订毕业论文并生成修改说明
-default_prompt: 请使用Revise处理当前目录中的论文，默认跳过参考文献DOI真实性核验；PDF论文只输出修改稿、修改说明MD和修改说明PDF，并保证修改说明PDF表格线清晰、字号可读。
+short_description: Thesis review, conservative revision, Word/PDF annotation, reference verification, and batch summaries
+default_prompt: >
+  Use Revise to process the undergraduate thesis files in the current folder.
+  Generate a revised file, a revision report in Markdown, and a revision report in PDF.
+  For Word files, copy the source first, edit only the copy, and highlight revisions in yellow.
+  For PDF files, create a nearby-annotation revised PDF.
+  If the same thesis has both Word and PDF versions, process the Word version by default and record that the PDF was skipped.
+  Check reference order, reference authenticity, and citation correctness by default.
+  If network or database access is unavailable, list unverified references truthfully and do not invent DOI, URL, volume, issue, page, or publication data.

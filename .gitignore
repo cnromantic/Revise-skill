@@ -35,10 +35,19 @@ temp/
 ~$*.xlsx
 
 # Revise generated outputs and local thesis files
+_local_workbench/
+_private_examples/
+test-materials-private/
+output-private/
 *-修改稿.docx
 *-修改稿.pdf
 *-修改说明.md
 *-修改说明.pdf
+*论文处理汇总.md
+*论文处理汇总.pdf
+*处理汇总.md
+*处理汇总.pdf
+*.zip
 *.doc
 *.docx
 *.pdf
