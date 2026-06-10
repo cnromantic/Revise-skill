@@ -6,7 +6,7 @@ description: Revise Agent Skill for Chinese undergraduate thesis review, conserv
 # Revise
 
 显示名称：Revise
-版本：3.1
+版本：3.2
 作者：qztcwrh
 
 Revise 是面向本科毕业论文（设计）质量保障的 Agent Skill（智能体技能），用于 AI 辅助初评、保守修订、Word 黄色高亮、PDF 就近批注、参考文献核验和结构化修改说明生成。Revise 只提供辅助评审、修改建议和过程留痕，不替代指导教师、评阅教师、答辩委员会、学校管理部门或学术规范审查的最终判断。
@@ -106,6 +106,7 @@ Revise 是面向本科毕业论文（设计）质量保障的 Agent Skill（智�
 
 - 明显错别字、标点、语病；
 - 技术名词规范，如 Spring Boot、MySQL、Vue.js、MyBatis、RESTful API、JWT、RBAC；
+- 中英文混排空格按 `style-rules.md` 执行；汉字与英文单词、英文缩写或常见技术名词之间的半角空格默认不是错误，不得批量删除；英文紧邻中文标点时，英文与中文标点之间不加空格；
 - 可确定的标题层级和编号问题；
 - 题目和正文能明确支撑的摘要表述；
 - 明显模板残留且替换对象唯一明确的问题。
@@ -210,5 +211,5 @@ PDF 修改稿必须保留原论文主体内容。若批注遮挡了部分无关�
 
 安装目录和 frontmatter 名称使用 `revise`。
 对外显示名称使用 `Revise`。
-当前版本为 `3.1`。
-后续开源时建议通过 Git tag 管理版本，如 `v3.0`、`v3.1`，不要在 Skill 内部堆积冗长 changelog。
+当前版本为 `3.2`。
+后续开源时建议通过 Git tag 管理版本，如 `v3.0`、`v3.1`、`v3.2`，不要在 Skill 内部堆积冗长 changelog。

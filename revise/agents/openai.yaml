@@ -8,3 +8,4 @@ default_prompt: >
   If the same thesis has both Word and PDF versions, process the Word version by default and record that the PDF was skipped.
   Check reference order, reference authenticity, and citation correctness by default.
   If network or database access is unavailable, list unverified references truthfully and do not invent DOI, URL, volume, issue, page, or publication data.
+  Preserve standard Chinese-English spacing: keep necessary spaces between Chinese text and English words, abbreviations, or numbers, but do not add spaces between English text and adjacent Chinese punctuation.
