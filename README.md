@@ -1,203 +1,64 @@
-# Revise Agent Skill V3.2
+# Revise Agent Skill V5.0
 
-本次更新（V3.2）主要修正中英文混排空格规则：中文正文中汉字与英文单词、英文缩写、阿拉伯数字之间通常保留或补充半角空格，不再把这类空格视为多余；但英文部分紧邻中文标点符号时，英文与中文标点之间不设空格。同步更新了相关验收规则，避免批量误删 `AI`、`PDF`、`Spring Boot`、`RBAC` 等术语前后的必要空格。
+Revise 是用于中文本科毕业论文（设计）评审与保守修改的智能体技能。V5.0 将专业识别纳入初评：每篇先核对封面、题目和摘要，再按专业及研究方法选择评分证据。单篇修改说明和多篇汇总均从 Markdown 生成可编辑的 LaTeX 源文件，再编译为 PDF。
 
-Revise 是一个面向中文本科毕业论文（设计）的 Revise Agent Skill（智能体技能），用于论文 AI 辅助评审、保守修订、Word 黄色高亮、PDF 就近批注、参考文献核验、批量汇总和结构化修改说明生成。它可根据“本科毕业论文（设计）抽检评议要素”进行辅助初评，并在修改建议落实后辅助进行复评；同时可检查论文结构、语言表达、图表编号、测试说明、参考文献真实性和引用正确性。针对软件开发类论文，Revise 额外优化了需求、设计、实现、测试和技术术语一致性的检查。
+[下载 V5.0（ZIP）](https://github.com/cnromantic/Revise-skill/archive/refs/tags/v5.0.zip) · [浏览 V3.2](https://github.com/cnromantic/Revise-skill/tree/v3.2) · [查看全部版本标签](https://github.com/cnromantic/Revise-skill/tags)
 
-本仓库中的 Skill 采用 Markdown + YAML + reference files 的轻量结构，不绑定单一平台。只要工具支持自定义指令、项目规则、Agent Skill、知识文件或上下文加载，就可以使用本 Skill。
+## 开始使用
 
-## 适用工具
+1. 取得包含 `SKILL.md`、`references/`、`assets/`、`scripts/` 和 `agents/` 的完整 `revise/` 目录。可使用本地副本，也可在公开仓库下载 ZIP，解压后查看 `SKILL.md` 的版本。[GitHub 仓库](https://github.com/cnromantic/Revise-skill) · [备用下载](https://pan.baidu.com/s/180KQ9x4b-wztz8_--FtGEQ?pwd=t2jq)
+2. **可直接让 AI Agent 安装**：“请把我提供的 revise 文件夹安装到当前工具的个人技能库。如有旧版，先备份。安装后核对版本、专业目录和四个报告模板，告诉我如何调用。”也可以按下表手动安装；最终应能读取 `skills/revise/SKILL.md` 或在技能界面看到 Revise。
+3. 打开论文目录，输入“使用 Revise 处理这里的本科论文，生成修改稿和修改说明”。学校量表、格式要求或自定义模板可一并提供。缺少原生技能入口时，将整个技能目录加入项目，明确要求按其中的 `SKILL.md` 执行并读取指定资源。
 
-本 Skill 可在目前主流 AI 编程与文档处理工具中使用，包括但不限于：
+## 工具与模型
 
-- OpenClaw
-- OpenAI Codex / ChatGPT Agent 类工具；
-- Claude Code、Gemini CLI 等命令行工具；
-- Trae Solo
-- Cursor
-- Cline
-- Windsurf、Continue、Roo Code 等支持规则文件或上下文文件的 IDE/Agent 工具；
-- 其他可读取 Markdown 指令并访问本地 Word/PDF 文件的 AI 工具。
+下表按工具列出安装位置。以 `~/` 开头的是当前用户主目录（Windows 通常为 `%USERPROFILE%`），以点开头且无 `~/` 的是项目相对路径。云端工作区与本地桌面端的文件系统可能不同，安装前确认本次会话能打开论文、运行编译器并写入输出目录。
 
-如果工具原生支持 Skill，可直接安装 `revise` 目录。  
-如果工具不支持 Skill 概念，可将 `SKILL.md` 作为系统提示词、项目规则或 Agent 指令使用，并让工具按需读取 `references/` 中的参考文件。
+| 工具 | 用户目录、项目目录或安装入口 |
+|----------------|------------------------------------------------------------------|
+| WorkBuddy | `~/.workbuddy/skills/`（本机核对）；企业版可在技能界面上传本地技能包。 |
+| TRAE | 国内版本机用户目录为 `~/.trae-cn/skills/`；其他版本从技能设置确认。 |
+| ZCode | 用户目录 `~/.zcode/skills/`，项目目录 `.zcode/skills/`。 |
+| Kimi Work | 桌面端在技能界面导入完整 ZIP。本机受管位置为 Windows 漫游应用数据目录下的 `kimi-desktop/daimon-share/daimon/skills/`。 |
+| 豆包工作 | 从“插件&技能&伙伴”管理技能。尚未核实跨版本通用的用户安装目录；如当前版本提供本地导入，选择完整技能包。 |
+| 千问办公 | 用户目录 `~/.qwenwork/skills/`，也支持手动上传。 |
+| Codex | 用户目录 `~/.agents/skills/`，项目目录 `.agents/skills/`；本机桌面环境也加载 `~/.codex/skills/`。 |
+| Claude Code | 用户目录 `~/.claude/skills/`，项目目录 `.claude/skills/`。 |
+| Cursor | 用户目录 `~/.cursor/skills/`，项目目录 `.cursor/skills/`。 |
+| Cline | 用户目录 `~/.cline/skills/`，项目目录 `.cline/skills/`。 |
 
-处理数学、管理、文学、外语等特定类型论文时，可在调用 Revise 时追加该学科的额外处理提示，例如要求重点检查数学论文中的定义、定理、证明逻辑、公式编号和 LaTeX 公式显示。
+安装入口与路径核对资料（2026 年 11 月）：[WorkBuddy](https://cloud.tencent.com/document/product/1831/134432) · [TRAE](https://docs.trae.cn/ide_skills) · [ZCode](https://zcode.z.ai/cn/docs/skill) · [Kimi Work](https://www.kimi.com/features/skills) · [豆包工作](https://open.doubao.com/document) · [千问办公](https://www.alibabacloud.com/help/zh/qwenwork/skills) · [Codex](https://developers.openai.com/codex/skills) · [Claude Code](https://code.claude.com/docs/en/skills) · [Cursor](https://cursor.com/docs/skills) · [Cline](https://docs.cline.bot/customization/skills)。
 
-## 主要能力
+国内工作流可结合工具实际支持的 **Kimi、GLM、DeepSeek** 等模型；Claude Code、Codex 等也可在各自支持的模型配置下使用。OpenClaw 用户可沿用其技能机制。安装对象是运行工具，模型名称本身不能确定 Skills 目录。
 
-- 自动识别并处理当前目录中的 `.docx`、`.doc` 或 `.pdf` 论文。
-- 同一篇论文同时存在 Word 和 PDF 时，默认只处理 Word，并记录 PDF 跳过原因。
-- 根据本科毕业论文（设计）抽检评议要素进行辅助初评打分，并给出逐项依据。
-- 检查题目、摘要、关键词、英文题名、目录、章节、正文、图表、测试、参考文献等关键部分。
-- 默认检查参考文献引用顺序、真实性和正文引用正确性；无法联网或数据库不可访问时，如实列出未核验项。
-- 在修改建议落实后辅助进行复评，展示预计改进情况。
-- 对软件开发类论文额外检查需求分析、系统设计、数据库、接口、实现、测试、截图、技术路线和术语大小写一致性。
-- 对可安全修改的问题生成修改稿，并用黄色突出显示或就近批注。
-- 对不能可靠直接修改的问题，在修改说明中列出并提示人工确认。
-- 输出 Markdown 与 PDF 两种格式的修改说明；多篇论文处理时额外输出处理汇总。受上下文窗口限制影响，建议优先一次只处理单篇论文；如确需一次处理多篇论文，尽量不要超过 3 篇。
+## 评审如何适配专业
 
-## 仓库结构
+- 技能随附教育部《普通高等学校本科专业目录（2026 年）》的 Markdown 转录。封面专业明确时核对专业名称、代码与门类，结合题目、摘要识别论文类型。只能判断专业类、材料相互冲突或候选不唯一时，先向使用者询问专业全称。校内名称或旧专业匹配不到时记录原称。[本科专业目录](revise/references/undergraduate-major-catalogue.md)
+- 文史论文检查史料、版本及引文如何支撑论点；数学论文检查定理条件、证明及符号；艺术设计检查创作意图、迭代与作品；软件开发继续检查需求、设计、实现与测试。专项证据进入同一份评分表。默认使用含否决性指标的本科抽检量表；用户提供学校量表时按学校口径评分。[专业评审指引](revise/references/discipline-review.md) · [评分量表](revise/references/rubric.md)
+- 默认检查参考文献引用顺序、真实性和引用正确性。数据库不可达、禁止联网或证据不足时逐项列出。核实的 DOI 或链接写入修改说明。仅有正文时，按呈现出的工作量与写作形式评价进度安排。[参考文献核验](revise/references/reference-verification.md)
 
-```text
-revise/
-├── SKILL.md
-├── agents/
-│   └── openai.yaml
-└── references/
-    ├── acceptance-checklist.md
-    ├── batch-summary-template.md
-    ├── docx-workflow.md
-    ├── pdf-workflow.md
-    ├── reference-verification.md
-    ├── report-template.md
-    ├── rubric.md
-    ├── software-engineering-checklist.md
-    ├── style-rules.md
-    └── technical-tooling.md
-```
+## 修改稿和报告
 
-各文件作用：
+Word 先复制源文件，在副本局部修改并黄色高亮，保留上标、自动编号、域和原有版式；PDF 先复制，再添加就近批注。属于同一篇的 Word 与 PDF 默认处理 Word 并记录跳过原因。摘要保留作者的叙述和正文能支持的结果，删去夸大结论后可直接在已有完整句收尾。PDF 页边写明应删除或替换的原文；仅因无法取得来源而待核的文献列在说明的核验表中。
 
-- `SKILL.md`：Skill 主入口，包含触发条件、默认行为、处理流程、输出要求和风险边界。
-- `agents/openai.yaml`：面向支持 Agent/Skill 列表的工具的展示信息。
-- `references/rubric.md`：本科毕业论文（设计）抽检评议规则和评分标准。
-- `references/reference-verification.md`：参考文献真实性核验与引用正确性判断规则。
-- `references/docx-workflow.md`：Word 论文处理规则。
-- `references/pdf-workflow.md`：PDF 论文处理规则。
-- `references/report-template.md`：修改说明模板。
-- `references/batch-summary-template.md`：多篇论文处理汇总模板。
-- `references/acceptance-checklist.md`：输出验收清单。
-- `references/software-engineering-checklist.md`：软件开发类论文专项检查清单。
-- `references/style-rules.md`：语言、标点、中英文混排和软件术语规则。
-- `references/technical-tooling.md`：推荐工具链与降级策略。
+| 输入 | 每篇交付 | 额外交付 |
+|---|---|---|
+| 单篇 Word 或 PDF | 同格式修改稿（旧 .doc 转 .docx），以及同名修改说明 .md、.tex、.pdf | — |
+| 多篇论文 | 各篇独立的修改稿和三种格式的说明 | `X篇论文处理汇总.md`、`.tex`、`.pdf`，X 为实际处理篇数 |
 
-## 安装方式
+修改说明的三张表分别列出初评、具体修改和复评。已改正文按实稿评分；仅有 PDF 批注时，第三张表按落实明确建议的条件逐项估分，缺少依据时标为待复评。需要更正内容时，编辑 MD 后重新生成 TeX 和 PDF。
 
-可从 GitHub 仓库下载：
+## 自定义报告模板
 
-```text
-https://github.com/cnromantic/Revise-skill
-```
+| 用途 | Markdown 内容模板 | LaTeX 排版模板 |
+|---|---|---|
+| 单篇说明 | [revision-report.md](revise/assets/templates/revision-report.md) | [revision-report.tex](revise/assets/templates/revision-report.tex) |
+| 多篇汇总 | [batch-summary.md](revise/assets/templates/batch-summary.md) | [batch-summary.tex](revise/assets/templates/batch-summary.tex) |
 
-如 GitHub 访问不稳定，也可通过百度网盘链接下载：
+四个文件均可单独自定义。将要调整的文件复制到**报告输出目录下的 `revise-templates/`** 并保留表中的文件名，或在调用时指明模板路径。技能对每个文件分别优先使用明确指定的模板，其次取输出目录的模板，余下的使用技能默认模板。例如只提供 `batch-summary.tex`，即可更换汇总 PDF 的版式。MD 可调整字段和校级评分行，TeX 可改页眉、颜色、字号与栏距，保留 Pandoc 的 `$body$` 插槽。两类报告都保留三张核心表和指定的文末说明。
 
-```text
-https://pan.baidu.com/s/180KQ9x4b-wztz8_--FtGEQ?pwd=t2jq
-```
+报告生成使用 Pandoc 和 XeLaTeX。先检测本机 **TeX Live 或 MiKTeX**，已有环境直接使用，二者均未安装时安装 MiKTeX。中文默认使用 Fandol 字体；安装或编译受限时列明错误并保留已完成文件。[编译步骤和命令](revise/references/technical-tooling.md) · [渲染脚本](revise/scripts/render_report.py)
 
-### 方式一：用于支持 Skill 的工具
+更多操作示例见[快速使用指南（Markdown）](Revise快速使用指南.md)和[快速使用指南（PDF）](Revise快速使用指南.PDF)。公开仓库仅维护技能、模板与使用文档，学生原稿、修改稿、报告和未脱敏测试材料保存在本地。
 
-将整个目录复制到目标工具的 Skill 目录中：
-
-```text
-revise
-```
-
-安装后目录名建议保持为：
-
-```text
-revise
-```
-
-Skill 的 frontmatter 名称也是 `revise`，对外显示名称为 `Revise`。
-
-### 方式二：用于项目规则或自定义指令
-
-在不支持原生 Skill 的工具中，可以这样使用：
-
-1. 将 `revise/SKILL.md` 作为主要规则文件或系统指令。
-2. 将 `revise/references/` 保持在同一项目中。
-3. 要求工具在处理论文时按需读取 `references/` 中的文件。
-4. 确保工具具有读取和写入当前论文目录的权限。
-
-### 方式三：一次性使用
-
-把 `SKILL.md` 的内容提供给 AI 工具，并附上论文文件或论文所在目录，再使用类似提示：
-
-```text
-请使用 Revise 处理当前目录中的论文，并生成修改稿和修改说明。
-请默认检查参考文献引用顺序、真实性和引用正确性；如果当前环境无法联网或无法访问数据库，请如实列出未核验项。
-如果是 PDF 论文，请输出批注式修改稿 PDF、修改说明 MD 和修改说明 PDF。
-```
-
-如当前环境不能联网，或暂时不考虑核验参考文献，可追加：
-
-```text
-本次不允许联网核验参考文献；请只检查引用顺序、参考文献格式和可见文本一致性，并在修改说明中列出需人工核验的参考文献，不要编造 DOI、URL、卷期、页码或出版信息。
-```
-
-## 推荐使用流程
-
-1. 将待处理论文放入工作目录。建议优先一次只处理单篇论文；如确需一次处理多篇论文，尽量不要超过 3 篇，超过 3 篇建议分批处理。
-2. 启用或加载 Revise Skill。
-3. 发出处理指令，例如：
-
-```text
-请使用 Revise 处理当前目录中的论文，并生成修改稿和修改说明。
-```
-
-4. 检查输出文件。
-5. 对 Skill 标记为“仍需人工确认”的内容进行人工复核。
-
-Word 输入时默认输出：
-
-```text
-论文题目-修改稿.docx
-论文题目-修改说明.md
-论文题目-修改说明.pdf
-```
-
-PDF 输入时默认输出：
-
-```text
-论文题目-修改稿.pdf
-论文题目-修改说明.md
-论文题目-修改说明.pdf
-```
-
-多篇论文输入时额外输出：
-
-```text
-X篇论文处理汇总.md
-X篇论文处理汇总.pdf
-```
-
-受 AI 工具上下文窗口限制影响，多篇论文批量处理结果仍应人工复核，避免因上下文过长导致遗漏。
-
-## 默认边界
-
-Revise 默认采用保守策略：
-
-- 不伪造实验数据、测试结果、截图、系统功能、源码行为或参考文献信息。
-- 不编造 DOI、URL、卷期、页码、期刊名或出版社信息。
-- 默认尝试核验参考文献真实性和引用正确性；不能联网、用户禁止联网或数据库不可访问时，如实列出未核验项。
-- 不因核验到 DOI 就强行把 DOI 加入论文参考文献列表；核验得到的 DOI 或可访问地址写入修改说明即可。
-- 对无法可靠修改的问题，只给出建议或列入人工确认事项。
-- 对 Word 修改稿先复制源文件再局部修改，尽量保留字符级格式，尤其是参考文献引用上标、超链接、域代码等格式。
-- 对 PDF 论文先复制源文件再进行就近黄色批注；未真正替换正文时，不声称完成原位正文替换。
-
-## 版本信息
-
-当前版本：`V3.2`
-Skill 名称：`revise`
-显示名称：`Revise`
-
-建议使用 Git tag 管理公开版本，例如：
-
-```text
-v3.2
-```
-
-## 共享与贡献建议
-
-- 不要在仓库中提交真实学生论文、处理示例、参考文献 PDF、案例/论文草稿、海报源文件、任务规划文档或任何未脱敏材料。
-- 修改 Skill 时优先保持 `SKILL.md` 简洁，将详细规则放入 `references/`。
-- 如新增工作流文件，应在 `SKILL.md` 中说明何时读取。
-- 发布前建议用脱敏样例论文测试 Word、PDF、同篇 Word/PDF、批量汇总、参考文献核验和修改说明输出。
-- 提交时显式添加公开仓库需要的文件，不使用 `git add .`。
-- 公开共享前请根据你的授权意图补充 `LICENSE` 文件。
-
-## 免责声明
-
-Revise 生成的评审意见、修改稿、批注、参考文献核验结果和修改说明仅供论文修改与评审参考，不能替代指导教师、评阅教师、学校管理部门或学术规范审查的最终意见。使用者应对论文内容、引用真实性、数据真实性和最终提交版本负责。
+说明：使用 Revise 技能生成的论文修改稿、批注和评审意见由人工智能辅助生成，仅供论文评审与修改参考。最终结论请以指导教师、评阅教师及学校相关管理部门的审核意见为准。

@@ -1,0 +1,34 @@
+% Pandoc standalone LaTeX template. Edit typography here; content comes from Markdown.
+\documentclass[UTF8,a4paper,11pt,fontset=fandol]{ctexart}
+\usepackage[left=21mm,right=21mm,top=23mm,bottom=22mm,headheight=16pt]{geometry}
+\usepackage[table]{xcolor}
+\usepackage{amsmath,amssymb,array,calc,longtable,booktabs,graphicx,fancyhdr,xurl}
+\usepackage[unicode,colorlinks=true]{hyperref}
+\definecolor{accent}{HTML}{365582}
+\definecolor{ink}{HTML}{19303C}
+\definecolor{rulegray}{HTML}{98ABB0}
+\hypersetup{allcolors=accent}
+\setcounter{secnumdepth}{0}
+\ctexset{section={format=\raggedright\LARGE\bfseries\color{ink},beforeskip=1ex,afterskip=1.2ex},
+ subsection={format=\raggedright\large\bfseries\color{accent},beforeskip=1.7ex,afterskip=.6ex}}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\color{accent}\sffamily Revise Agent Skill \enspace / \enspace V5.0}
+\fancyhead[R]{\small\color{ink}多篇论文处理汇总}
+\fancyfoot[C]{\small\color{ink}\thepage}
+\renewcommand{\headrulewidth}{0.6pt}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.32}
+\arrayrulecolor{rulegray}
+\AtBeginEnvironment{longtable}{\small\rowcolors{2}{accent!5}{white}}
+\newcounter{none}
+\setlength{\LTpre}{4pt}
+\setlength{\LTpost}{6pt}
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\providecommand{\pandocbounded}[1]{#1}
+\urlstyle{same}
+\raggedbottom
+\begin{document}
+$body$
+\end{document}

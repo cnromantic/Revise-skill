@@ -1,12 +1,12 @@
 ---
 name: revise
-description: Revise Agent Skill for Chinese undergraduate thesis review, conservative editing, Word highlight revisions, PDF nearby annotations, reference verification, citation correctness checks, batch summaries, and revision reports. Use for .docx, .doc, or .pdf thesis files, especially software-development theses, when the user asks to review, revise, annotate, score, verify references, check structure/style/tables/figures/tests, or process thesis files in a folder.
+description: Revise Agent Skill for Chinese undergraduate thesis review, conservative editing, Word highlight revisions, PDF nearby annotations, reference verification, citation correctness checks, batch summaries, and revision reports. Use for .docx, .doc, or .pdf thesis files, across academic disciplines, when the user asks to review, revise, annotate, score, verify references, check structure/style/tables/figures/tests, or process thesis files in a folder.
 ---
 
 # Revise
 
 显示名称：Revise
-版本：3.2
+版本：5.0
 作者：qztcwrh
 
 Revise 是面向本科毕业论文（设计）质量保障的 Agent Skill（智能体技能），用于 AI 辅助初评、保守修订、Word 黄色高亮、PDF 就近批注、参考文献核验和结构化修改说明生成。Revise 只提供辅助评审、修改建议和过程留痕，不替代指导教师、评阅教师、答辩委员会、学校管理部门或学术规范审查的最终判断。
@@ -19,21 +19,22 @@ Revise 是面向本科毕业论文（设计）质量保障的 Agent Skill（智�
 
 1. 自动识别输入文件、论文格式和待处理范围。
 2. 文件夹内如果同时存在同一篇论文的 Word 文件（`.docx`/`.doc`）和 PDF 文件（`.pdf`），默认只处理 Word，跳过同名 PDF，并在修改说明、批量汇总或处理日志中记录跳过原因。
-3. 按本科毕业论文（设计）抽检评议要素进行辅助初评打分，先检查否决性指标风险。
-4. 检查题目、摘要、关键词、英文题名、Abstract、Key words、目录、章节、正文、图表、测试、参考文献等关键部分。
+3. 逐篇先读封面专业栏、题目和摘要，核对专业目录。专业无法唯一确定时先询问使用者专业全称，确认后按专业特点与论文类型选择评审证据，再按本科毕业论文（设计）抽检评议要素进行辅助初评打分，先检查否决性指标风险。
+4. 检查题目、摘要、关键词、英文题名、Abstract、Key words、目录、章节、正文、图表、研究方法、论证或成果、参考文献等关键部分。
 5. 默认检查参考文献引用顺序、参考文献真实性和正文引用正确性；无法联网、用户禁止联网或数据库不可访问时，如实列出未核验项和人工核验建议。
 6. 软件开发类系统论文额外检查需求分析、系统设计、数据库、接口、实现、测试、截图、技术路线和术语大小写一致性。
 7. 能直接修改的低风险问题应在修改稿中局部修改，并用黄色突出显示。
 8. 不能可靠直接修改的问题，应在修改稿中批注或在修改说明中列明。
 9. Word 论文必须先复制源 Word 为修改稿，再在副本上局部修改；不得从纯文本重建整个 Word；Word修改稿有修改过的地方一定要用黄色突出显示表示。
 10. PDF 论文必须先复制源 PDF 为修改稿 PDF，再添加就近批注；没有真正替换 PDF 正文时，不得声称已替换正文。
-11. 生成 Markdown 和 PDF 两种格式的修改说明。
+11. 先填修改说明 Markdown，由其生成同名 LaTeX 源文件并编译 PDF。三种格式一并交付。
 12. 明确列出仍需人工确认的问题。
 13. 不伪造实验数据、测试结果、截图、系统功能、源码行为、参考文献 DOI、URL、卷期、页码或出版信息。
-14. 当用户明确要求处理多篇论文，或当前目录下可明确识别出多篇均需处理的论文时，应分别处理每篇论文，并额外生成 `X篇论文处理汇总.md` 和 `X篇论文处理汇总.pdf`，其中 `X` 为实际处理论文数量。
+14. 当用户明确要求处理多篇论文，或当前目录下可明确识别出多篇均需处理的论文时，应分别处理每篇论文，并额外生成 `X篇论文处理汇总.md`、`X篇论文处理汇总.tex` 和 `X篇论文处理汇总.pdf`，其中 `X` 为实际处理论文数量。
 
 只有在以下情况才询问用户：
 
+- 无法确定论文专业名称；
 - 当前目录下有多篇候选论文，且无法判断处理哪一篇；
 - 文件损坏、加密或无法读取；
 - 用户要求与默认完整流程冲突；
@@ -43,7 +44,7 @@ Revise 是面向本科毕业论文（设计）质量保障的 Agent Skill（智�
 
 默认对参考文献开展三类检查：
 
-1. 正文引用序号、首次出现顺序与参考文献列表顺序是否一致；
+1. 按学校及专业采用的引注体例检查顺序与对应关系；采用顺序编码制时核对正文首次引用与文末排序；
 2. 参考文献条目真实性核验，优先检索 DOI、Crossref、出版社/期刊官网、可访问网页或用户提供的数据库信息；
 3. 引用正确性判断，即正文引用语境是否与被引文献题名、摘要、关键词或可获取页面信息基本匹配。
 
@@ -54,6 +55,8 @@ Revise 是面向本科毕业论文（设计）质量保障的 Agent Skill（智�
 ## 三、处理流程
 
 ### 1. 读取论文
+
+先按 [discipline-review.md](references/discipline-review.md) 逐篇识别专业，在 [undergraduate-major-catalogue.md](references/undergraduate-major-catalogue.md) 中查对应名称、代码和上级门类。记录判断依据与适用的专项问题；涉及交叉学科时区分学籍专业和研究方法。
 
 提取并识别：
 
@@ -74,12 +77,12 @@ Revise 是面向本科毕业论文（设计）质量保障的 Agent Skill（智�
 - [pdf-workflow.md](references/pdf-workflow.md)：PDF 论文处理规则，PDF格式的论文需要读取；
 - [technical-tooling.md](references/technical-tooling.md)：推荐工具链与降级策略，所有调用此Skill的对话都要读取，如果发现相应的工具比如需要的Python第三方库没有安装，第一次使用时先安装这些工具，只有在遇到网络故障时或多次尝试失败后才采用降级策略；
 - [batch-summary-template.md](references/batch-summary-template.md)：多篇论文处理汇总模板，存在多篇论文需要处理时需要读取；
-- [acceptance-checklist.md](references/acceptance-checklist.md)：输出验收清单，所有调用此Skill的对话都要读取；；
+- [acceptance-checklist.md](references/acceptance-checklist.md)：输出验收清单，所有调用此Skill的对话都要读取；
 - [report-template.md](references/report-template.md)：修改说明模板，所有调用此Skill的对话都要读取。
 
 ### 2. 初评打分
 
-先检查否决性指标风险：
+按已确认的专业与论文类型解释评分依据，在评分表写明对应证据。先检查否决性指标风险：
 
 - 政治方向、法律法规、社会公序良俗；
 - 明确可见的学术诚信风险。
@@ -93,8 +96,8 @@ Revise 是面向本科毕业论文（设计）质量保障的 Agent Skill（智�
 1. 题目、摘要、关键词、系统名称前后不一致；
 2. 目录和正文标题不一致，章节缺失、重复、跳号；
 3. 图表编号跳号、重复，正文引用与图表题不对应；
-4. 需求、设计、数据库、实现、测试和截图之间存在系统逻辑不一致；
-5. 测试结论缺乏测试记录、截图、日志或接口返回支撑；
+4. 研究问题、方法、材料与结论不对应；软件系统论文还检查需求、设计、实现和测试之间的一致性；
+5. 专业论断缺少证据，例如文本阐释缺原文、数学证明缺条件、实验结论缺测量记录、软件测试缺测试记录；
 6. 出现其他论文主题的模板残留；
 7. 错别字、病句、口语化、不规范标点和中英文混排问题；
 8. 参考文献格式、引用顺序、真实性核验和引用正确性问题；
@@ -108,7 +111,7 @@ Revise 是面向本科毕业论文（设计）质量保障的 Agent Skill（智�
 - 技术名词规范，如 Spring Boot、MySQL、Vue.js、MyBatis、RESTful API、JWT、RBAC；
 - 中英文混排空格按 `style-rules.md` 执行；汉字与英文单词、英文缩写或常见技术名词之间的半角空格默认不是错误，不得批量删除；英文紧邻中文标点时，英文与中文标点之间不加空格；
 - 可确定的标题层级和编号问题；
-- 题目和正文能明确支撑的摘要表述；
+- 摘要按原段落语气就地删改。保留已有且有依据的结果句；删去无依据的程度词或分句后，若上一句已完整收束，就在此结束。不要另加章节导读（如“第5章以……说明……”）、评审意见或通用结尾。通读修改后的整段，并同步核对英文摘要；
 - 明显模板残留且替换对象唯一明确的问题。
 
 参考文献题名、期刊名、出版社名、代码、URL、数据库字段、命令、配置、文件路径不直接改，最多在修改说明中提示。
@@ -121,25 +124,27 @@ Word 自动编号不一定出现在段落纯文本中。参考文献或标题如
 
 ### Word 输入
 
-输出 3 个文件：
+输出 4 个文件：
 
 ```text
 论文题目-修改稿.docx
 论文题目-修改说明.md
+论文题目-修改说明.tex
 论文题目-修改说明.pdf
 ```
 
 ### PDF 输入
 
-输出 3 个文件：
+输出 4 个文件：
 
 ```text
 论文题目-修改稿.pdf
 论文题目-修改说明.md
+论文题目-修改说明.tex
 论文题目-修改说明.pdf
 ```
 
-PDF 不再单独输出“逐项修改建议.md”或“可替换文本.md”。如需要替换文本，应合并写入“修改说明.md”和“修改说明.pdf”中的“具体修改情况”或“仍需人工确认的问题”。
+PDF 不再单独输出“逐项修改建议.md”或“可替换文本.md”。如需要替换文本，应合并写入各格式修改说明的“具体修改情况”或“仍需人工确认的问题”。
 
 ### 多篇论文输入
 
@@ -147,6 +152,7 @@ PDF 不再单独输出“逐项修改建议.md”或“可替换文本.md”。�
 
 ```text
 X篇论文处理汇总.md
+X篇论文处理汇总.tex
 X篇论文处理汇总.pdf
 ```
 
@@ -160,7 +166,7 @@ PDF 论文应优先采用“就近黄色批注”方式，效果接近人工在 
 2. 批注框距离问题位置不要太远，避免让读者来回寻找；
 3. 批注框可以遮住附近不需要修改的普通文字或图表，但不得遮住需要修改的原问题文字；
 4. 批注框应使用清晰的黄色背景、橙色或深色边框，文字颜色清楚可读；
-5. 批注内容应简短，包含“Revise 批注”或类似标识、问题说明和建议改法；
+5. 页面可见的批注应能直接照做，如“删除第二个重复句”或“将‘代码4-1、代码4-1’改为‘代码4-1、代码4-2’”。空间不足可用简短的动作句，完整原文与替换句放在同一批注和修改表中。文献仅因检索受限而待核时，记入核验表；有具体差错才在相应字段或引文旁说明改法；
 6. 如果工具支持箭头、短线或注释图标，可指向问题位置；
 7. 如果无法精准定位，只能提取文本，则可在对应页附近添加页面级批注，并在修改说明中说明限制；
 8. 不得声称已经完成原位文字替换，除非确实可靠替换了 PDF 正文。
@@ -180,36 +186,16 @@ PDF 修改稿必须保留原论文主体内容。若批注遮挡了部分无关�
 7. Word 或 PDF 处理方式说明；
 8. 同篇 Word/PDF 跳过记录；
 9. 仍需人工确认的问题；
-10. 修改后复评或落实建议后的预计复评；
+10. 已改正文按实稿逐项复评。仅批注的 PDF 默认标明“正文待修改”，将第三张表写成“落实建议后的预计复评”，列明每项分数、对应批注和成立条件；无法合理估分的项目写“待复评”。不复制初评表冒充复评，也不按批注数量加分；
 11. 总体评价；
 12. AI 辅助生成说明。
 
 默认使用简明中文撰写。
 
-## 七、修改说明 PDF 排版要求
+## 七、模板与 PDF 编译
 
-修改说明 PDF 必须以“可读、像正式文档”为目标，不能直接把 Markdown 管道表格当纯文本输出。
+单篇和汇总都从 [assets/templates/](assets/templates/) 选取对应的一对模板。对 MD、TeX 分别按“用户指定 → 输出目录下的 `revise-templates/` → 技能默认模板”选择。先完成 MD 的初评表、具体修改表、复评表及规定的文末说明，再执行 [technical-tooling.md](references/technical-tooling.md) 中的 Pandoc、XeLaTeX 流程。先检测并复用已有 TeX Live 或 MiKTeX，均未安装时安装 MiKTeX。交付前检查三种格式的内容、分页、重复表头、中文和总分；编译失败时保留 MD 和已生成的 TeX，标明 PDF 未完成。
 
-生成修改说明 PDF 时应遵守：
+## 八、命名与版本
 
-1. 页面使用 A4，页边距建议 18-22 mm；
-2. 中文字体优先使用 Microsoft YaHei、SimSun、SimHei 或系统可用中文字体；
-3. 标题字号建议 16-18 pt，一级小标题 12-14 pt；
-4. 正文字号不小于 10 pt，建议 10.5 pt；
-5. 表格字号不小于 9 pt，优先 9.5-10 pt；
-6. 表格必须使用真实表格线，不得使用 Markdown 文本竖线模拟；
-7. 表格线建议 0.5 pt 灰色或黑色，表头可用浅灰或浅黄色底色；
-8. 单元格文字必须自动换行，垂直方向顶部对齐；
-9. 表格内边距建议 4-6 pt，避免文字贴边；
-10. 宽表不得强行压成极小字体，应拆分为多个窄表，或使用横向页面；
-11. 多页表格应重复表头；
-12. 表格不得明显溢出页面；
-13. 初评表、具体修改表、参考文献核验表、复评表应保持清楚的网格线和一致的列宽；
-14. 如果当前工具无法生成友好的表格 PDF，应优先生成 HTML 或 DOCX 中间稿再转 PDF，并在说明中如实写明。
-
-## 八、命名与版本管理
-
-安装目录和 frontmatter 名称使用 `revise`。
-对外显示名称使用 `Revise`。
-当前版本为 `3.2`。
-后续开源时建议通过 Git tag 管理版本，如 `v3.0`、`v3.1`、`v3.2`，不要在 Skill 内部堆积冗长 changelog。
+安装目录及 frontmatter 名称为 `revise`，显示名称为 Revise，版本为 **5.0**。

@@ -43,10 +43,12 @@ output-private/
 *-修改稿.pdf
 *-修改说明.md
 *-修改说明.pdf
+*-修改说明.tex
 *论文处理汇总.md
 *论文处理汇总.pdf
 *处理汇总.md
 *处理汇总.pdf
+*处理汇总.tex
 *.zip
 *.doc
 *.docx

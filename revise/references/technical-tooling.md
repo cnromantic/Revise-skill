@@ -26,7 +26,6 @@
 | 文本提取、坐标定位、批注 | `PyMuPDF` / `fitz` | 首选；用于 `search_for`、高亮、FreeText 批注、保存 PDF |
 | PDF 元数据、拆分合并 | `pypdf` | 辅助处理页数、合并说明页等 |
 | 表格/文本提取 | `pdfplumber` | 可选，用于辅助识别表格文本 |
-| 生成说明 PDF | `reportlab`、`weasyprint`、Pandoc、LibreOffice | 优先保证表格清晰、中文可读 |
 
 降级策略：
 
@@ -51,14 +50,24 @@
 2. 当前环境无法联网或用户禁止联网时，不做真实性断言。
 3. 检索结果不充分时，不补造 DOI、URL、卷期、页码或出版信息。
 
-## 四、修改说明 PDF
+## 四、从报告 MD 编译中文 PDF
 
-修改说明 PDF 应优先保证可读性：
+1. 在生成说明前检查 `xelatex --version`。Windows 用 `Get-Command xelatex -All`，macOS/Linux 用 `command -v xelatex`。若 PATH 未发现，检查系统已安装应用、TeX Live 安装树、MiKTeX Console 或 macOS 的 `/Library/TeX/texbin`。已有发行版应定位其 bin 目录或用其包管理器补齐 XeLaTeX、ctex、Fandol、longtable 等依赖。
+2. 确认两者都未安装时，安装 MiKTeX。Windows 可运行 `winget install --id MiKTeX.MiKTeX --exact`；没有 winget 时使用官方 Basic Installer。macOS 或 Linux 按 [MiKTeX 官方平台安装步骤](https://miktex.org/download) 完成当前用户初始化。刷新当前进程 PATH，再查 XeLaTeX 版本。若平台、权限或网络导致安装失败，记录实际错误与剩余交付物。
+3. 检查 `pandoc --version`，缺少时安装 [Pandoc](https://pandoc.org/installing.html)。按所选 Markdown 模板填完报告，保留分隔行中各列横线的相对长度以控制列宽。长链接使用 Markdown 链接，公式使用数学模式。自定义 TeX 使用 Pandoc 模板语法，保留 `$body$` 插槽；字号、页边距、颜色和页眉可改。
+4. 在输出目录中运行下例。把脚本路径改为实际安装位置，汇总用 `--kind batch-summary`。脚本调用 Pandoc 生成同名独立 .tex，再调用 XeLaTeX 两遍。指定模板目录用 `--templates "目录"`；单独指定 TeX 文件用 `--tex-template "文件.tex"`。无法运行 Python 时，等价命令如下。
 
-1. 使用真实表格线，不把 Markdown 管道表格原样写成纯文本。
-2. 中文字体可用时优先选择 Microsoft YaHei、SimSun、SimHei 或系统可用中文字体。
-3. 宽表应拆分或使用横向页面，不把字号压得过小。
-4. 如果当前工具无法生成友好 PDF，应先生成 HTML 或 DOCX 中间稿再转 PDF，并说明工具限制。
+```text
+python "<技能目录>/scripts/render_report.py" "论文题目-修改说明.md" --kind revision-report
+```
+
+```text
+pandoc "论文题目-修改说明.md" --from=markdown-raw_tex-raw_html --to=latex --standalone --no-highlight --wrap=none --columns=1 --template="选定模板.tex" -o "论文题目-修改说明.tex"
+xelatex -no-shell-escape -interaction=nonstopmode -halt-on-error "论文题目-修改说明.tex"
+xelatex -no-shell-escape -interaction=nonstopmode -halt-on-error "论文题目-修改说明.tex"
+```
+
+5. 检查本轮退出码及 PDF 生成时间，重新打开 PDF，检查中文、表格边界、换行和续页表头。核对初评、修改、复评和最后的说明与 MD 一致。若失败，处理首个编译错误后重试；保留已生成的 MD、TeX 并说明缺项，不能把旧 PDF 计作成功。
 
 ## 五、中文编码与终端显示
 
