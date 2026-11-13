@@ -2,13 +2,13 @@
 
 Revise 是用于中文本科毕业论文（设计）评审与保守修改的智能体技能。V5.0 将专业识别纳入初评：每篇先核对封面、题目和摘要，再按专业及研究方法选择评分证据。单篇修改说明和多篇汇总均从 Markdown 生成可编辑的 LaTeX 源文件，再编译为 PDF。
 
-[下载 V5.0（ZIP）](https://github.com/cnromantic/Revise-skill/archive/refs/tags/v5.0.zip) · [浏览 V3.2](https://github.com/cnromantic/Revise-skill/tree/v3.2) · [查看全部版本标签](https://github.com/cnromantic/Revise-skill/tags)
+[下载最新修订（ZIP）](https://github.com/cnromantic/Revise-skill/archive/refs/heads/main.zip) · [浏览 V5.0 首发版](https://github.com/cnromantic/Revise-skill/tree/v5.0) · [浏览 V3.2](https://github.com/cnromantic/Revise-skill/tree/v3.2) · [查看全部版本标签](https://github.com/cnromantic/Revise-skill/tags)
 
 ## 开始使用
 
 1. 取得包含 `SKILL.md`、`references/`、`assets/`、`scripts/` 和 `agents/` 的完整 `revise/` 目录。可使用本地副本，也可在公开仓库下载 ZIP，解压后查看 `SKILL.md` 的版本。[GitHub 仓库](https://github.com/cnromantic/Revise-skill) · [备用下载](https://pan.baidu.com/s/180KQ9x4b-wztz8_--FtGEQ?pwd=t2jq)
 2. **可直接让 AI Agent 安装**：“请把我提供的 revise 文件夹安装到当前工具的个人技能库。如有旧版，先备份。安装后核对版本、专业目录和四个报告模板，告诉我如何调用。”也可以按下表手动安装；最终应能读取 `skills/revise/SKILL.md` 或在技能界面看到 Revise。
-3. 打开论文目录，输入“使用 Revise 处理这里的本科论文，生成修改稿和修改说明”。学校量表、格式要求或自定义模板可一并提供。缺少原生技能入口时，将整个技能目录加入项目，明确要求按其中的 `SKILL.md` 执行并读取指定资源。
+3. 打开论文目录。在支持斜杠命令的工具中可直接输入 `/revise`，也可输入“使用 Revise 处理这里的本科论文，生成修改稿和修改说明”。学校量表、格式要求或自定义模板可一并提供。缺少原生技能入口时，将整个技能目录加入项目，明确要求按其中的 `SKILL.md` 执行并读取指定资源。
 
 ## 工具与模型
 
@@ -35,11 +35,13 @@ Revise 是用于中文本科毕业论文（设计）评审与保守修改的智�
 
 - 技能随附教育部《普通高等学校本科专业目录（2026 年）》的 Markdown 转录。封面专业明确时核对专业名称、代码与门类，结合题目、摘要识别论文类型。只能判断专业类、材料相互冲突或候选不唯一时，先向使用者询问专业全称。校内名称或旧专业匹配不到时记录原称。[本科专业目录](revise/references/undergraduate-major-catalogue.md)
 - 文史论文检查史料、版本及引文如何支撑论点；数学论文检查定理条件、证明及符号；艺术设计检查创作意图、迭代与作品；软件开发继续检查需求、设计、实现与测试。专项证据进入同一份评分表。默认使用含否决性指标的本科抽检量表；用户提供学校量表时按学校口径评分。[专业评审指引](revise/references/discipline-review.md) · [评分量表](revise/references/rubric.md)
-- 默认检查参考文献引用顺序、真实性和引用正确性。数据库不可达、禁止联网或证据不足时逐项列出。核实的 DOI 或链接写入修改说明。仅有正文时，按呈现出的工作量与写作形式评价进度安排。[参考文献核验](revise/references/reference-verification.md)
+- 默认检查参考文献引用顺序、真实性和引用正确性。如期刊网站或文献数据库暂时无法访问，可用其他可靠来源或作者提供的材料核对；仍无充分依据的条目在说明中逐项标明。若本次只需检查引用顺序、条目对应和著录格式，可在提示中说明。核实的 DOI 或链接写入修改说明。仅有正文时，按呈现出的工作量与写作形式评价进度安排。[参考文献核验](revise/references/reference-verification.md)
 
 ## 修改稿和报告
 
 Word 先复制源文件，在副本局部修改并黄色高亮，保留上标、自动编号、域和原有版式；PDF 先复制，再添加就近批注。属于同一篇的 Word 与 PDF 默认处理 Word 并记录跳过原因。摘要保留作者的叙述和正文能支持的结果，删去夸大结论后可直接在已有完整句收尾。PDF 页边写明应删除或替换的原文；仅因无法取得来源而待核的文献列在说明的核验表中。
+
+未指定输出位置时，每篇论文的修改稿和修改说明保存在原论文所在文件夹。同一文件夹内多篇论文的汇总报告也保存在该处。指定了输出文件夹时，所有结果保存到指定位置。
 
 | 输入 | 每篇交付 | 额外交付 |
 |---|---|---|
